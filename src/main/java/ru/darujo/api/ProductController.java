@@ -22,23 +22,18 @@ public class ProductController {
 
     @GetMapping("/productEdit")
     public String ProductEdit(long id, Model model){
-        System.out.println( "редактирова");
         Product product = productRepository.getProductForId(id);
-        System.out.println(System.identityHashCode(product));
         model.addAttribute("product",product);
         return "product";
     }
 
     @GetMapping("/productAdd")
     public String ProductAdd(Model model){
-        System.out.println( "добавить");
         model.addAttribute("product",productService.createEmptyProduct());
         return "product";
     }
     @PostMapping ("/")
     public String ProductSave(Product product, Model model){
-        System.out.println( "Сохранить");
-        System.out.println(System.identityHashCode(product));
         productService.saveProduct(product);
         return  index(model);
     }
