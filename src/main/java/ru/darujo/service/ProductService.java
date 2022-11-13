@@ -1,14 +1,15 @@
 package ru.darujo.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.darujo.model.Product;
 import ru.darujo.model.ProductRepository;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 import java.util.Random;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class ProductService {
 
@@ -18,11 +19,7 @@ public class ProductService {
     public void createNewProduct() {
         Product product = new Product(++idSequence,"Product #" + idSequence, Math.abs(random.nextInt()) /1000f);
         productRepository.addProduct(product);
-        System.out.println(product.getPrice());
 
-    }
-    public Product createEmptyProduct() {
-        return new Product();
     }
     public void saveProduct(Product product){
         if (product.getId()== 0L){
@@ -38,4 +35,14 @@ public class ProductService {
     }
 
 
+    public Map<Long,Product> getProducts() {
+        return productRepository.getProducts();
+    }
+
+    public Product getProductForId(long id) {
+        return productRepository.getProductForId(id);
+    }
+    public void delProductForId(long id){
+        productRepository.deleteProductForId(id);
+    }
 }

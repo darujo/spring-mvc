@@ -31,4 +31,8 @@ public class ProductRepository {
         return super.toString() + "\n" + products;
     }
 
+    public void deleteProductForId(long id) {
+        products.remove(id);
+
+    }
 }
