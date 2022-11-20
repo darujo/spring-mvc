@@ -1,36 +1,40 @@
 package ru.darujo.api;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.darujo.model.Product;
-import ru.darujo.service.ProductService;
+import ru.darujo.service.ProductDao;
 
 import java.util.Collection;
 
 @RestController
-@RequiredArgsConstructor
 public class ProductController {
-    private final ProductService productService;
+    private  ProductDao productDao;
+
+    @Autowired
+    public void setProductDao(ProductDao productDao) {
+        this.productDao = productDao;
+    }
 
     @GetMapping("/products")
     public Collection<Product> index() {
-        return productService.getProducts().values();
+        return productDao.findAll();
     }
 
     @GetMapping("/editProduct")
     public Product ProductEdit(long id) {
-        return productService.getProductForId(id);
+        return productDao.findById(id);
     }
 
     @PostMapping ("/saveProduct")
     public void ProductSave(Product product){
-        productService.saveProduct(product);
+        productDao.saveOrUpdate(product);
     }
     @GetMapping("/deleteProduct")
     public void deleteProduct(long id) {
-        productService.delProductForId(id);
+        productDao.deleteById(id);
     }
 
 

@@ -36,7 +36,7 @@ angular.module('app',[]).controller("indexController",function ($scope, $http) {
         })
             .then(function (response){
                 ProductIdEdit = response.data.id;
-                document.getElementById("ProductName").value = response.data.name;
+                document.getElementById("ProductName").value = response.data.title;
                 document.getElementById("ProductPrice").value = response.data.price;
                 showFormEdit();
             });
@@ -58,7 +58,7 @@ angular.module('app',[]).controller("indexController",function ($scope, $http) {
             method : "POST",
             params : {
                 id : ProductIdEdit,
-                name : document.getElementById("ProductName").value,
+                title : document.getElementById("ProductName").value,
                 price: document.getElementById("ProductPrice").value
             }
         }).then (function (response){
