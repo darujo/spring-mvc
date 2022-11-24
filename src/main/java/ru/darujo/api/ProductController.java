@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.darujo.model.Product;
+import ru.darujo.model.publicmodel.BuyerPublic;
+import ru.darujo.model.publicmodel.ProductPublic;
 import ru.darujo.service.ProductDao;
 
 import java.util.Collection;
+import java.util.Set;
 
 @RestController
 public class ProductController {
@@ -19,22 +21,27 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public Collection<Product> index() {
+    public Collection<ProductPublic> index() {
         return productDao.findAll();
     }
 
     @GetMapping("/editProduct")
-    public Product ProductEdit(long id) {
+    public ProductPublic ProductEdit(long id) {
         return productDao.findById(id);
     }
 
     @PostMapping ("/saveProduct")
-    public void ProductSave(Product product){
+    public void ProductSave(ProductPublic product){
         productDao.saveOrUpdate(product);
     }
     @GetMapping("/deleteProduct")
     public void deleteProduct(long id) {
         productDao.deleteById(id);
+    }
+
+    @GetMapping("/findBuyerByProductId")
+    public Set<BuyerPublic> findBuyerByProductId(long id) {
+        return productDao.findBuyerByProductId(id);
     }
 
 

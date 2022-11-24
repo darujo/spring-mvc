@@ -1,28 +1,29 @@
 package ru.darujo.model;
 
 import org.springframework.stereotype.Component;
+import ru.darujo.model.publicmodel.ProductPublic;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class ProductRepository {
-    private final Map<Long,Product> products;
+    private final Map<Long,ProductPublic> products;
 
     public ProductRepository() {
         products = new HashMap<>() ;
     }
 
-    public Map<Long,Product> getProducts() {
+    public Map<Long,ProductPublic> getProducts() {
         return products;
     }
 
-    public Product getProductForId(long id) {
+    public ProductPublic getProductForId(long id) {
         return products.get(id);
 
     }
 
-    public void addProduct(Product product) {
+    public void addProduct(ProductPublic product) {
         products.put(product.getId(),product);
     }
 

@@ -1,18 +1,25 @@
 package ru.darujo.service;
 
 import org.springframework.stereotype.Service;
-import ru.darujo.model.Product;
+import ru.darujo.model.publicmodel.BuyerPublic;
+import ru.darujo.model.publicmodel.ProductPublic;
 
 import java.util.Collection;
+import java.util.Set;
+
 @Service
 public interface ProductDao {
 
-    void saveOrUpdate(Product product);
+    void saveOrUpdate(ProductPublic product);
 
-    Collection< Product> findAll();
+    Collection< ProductPublic> findAll();
 
-    Product findById(long id);
+    ProductPublic findById(long id);
 
     void deleteById(long id);
+
+    default Set<BuyerPublic> findBuyerByProductId(long id){
+        throw new RuntimeException("Метод не реализован");
+    }
 
 }

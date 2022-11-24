@@ -9,7 +9,8 @@
         <property name="hibernate.connection.password">5397</property>
         <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/postgres</property>
         <property name="hibernate.default_schema">productrepo</property>
-
+        <property name="hibernate.current_session_context_class">thread</property>
+        <property name="hibernate.hbm2ddl.auto">validate</property>
 
 
         <property name="connection_pool_size">10</property>
@@ -20,6 +21,8 @@
 
 
         <mapping class="ru.darujo.model.Product"/>
-
+        <mapping class="ru.darujo.model.ChequeLine"/>
+        <mapping class="ru.darujo.model.Cheque"/>
+        <mapping class="ru.darujo.model.Buyer"/>
     </session-factory>
 </hibernate-configuration>

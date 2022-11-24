@@ -1,4 +1,4 @@
-package ru.darujo.service;
+package ru.darujo.service.posgres;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,7 +17,7 @@ public class SessionFactoryUtils {
     }
 
     public Session getSession(){
-        return sessionFactory.openSession();
+        return sessionFactory.getCurrentSession();
     }
     public void shutdown(){
         sessionFactory.close();

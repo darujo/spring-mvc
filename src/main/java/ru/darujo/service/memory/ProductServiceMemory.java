@@ -1,16 +1,17 @@
-package ru.darujo.service;
+package ru.darujo.service.memory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.darujo.model.Product;
 import ru.darujo.model.ProductRepository;
+import ru.darujo.model.publicmodel.ProductPublic;
+import ru.darujo.service.ProductDao;
 
 import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.Random;
 
 @Service
-public class ProductServiceMemory implements ProductDao{
+public class ProductServiceMemory implements ProductDao {
 
     private ProductRepository productRepository;
 
@@ -22,12 +23,12 @@ public class ProductServiceMemory implements ProductDao{
     private final Random  random = new Random();
     public static long idSequence = 0L;
     public void createNewProduct() {
-        Product product = new Product(++idSequence,"Product #" + idSequence, Math.abs(random.nextInt()) /1000f);
+        ProductPublic product = new ProductPublic(++idSequence,"Product #" + idSequence, Math.abs(random.nextInt()) /1000f);
         productRepository.addProduct(product);
 
     }
     @Override
-    public void saveOrUpdate(Product product){
+    public void saveOrUpdate(ProductPublic product){
         if (product.getId()== 0L){
             product.setId(++idSequence);
         }
@@ -41,12 +42,12 @@ public class ProductServiceMemory implements ProductDao{
     }
 
     @Override
-    public Collection<Product> findAll() {
+    public Collection<ProductPublic> findAll() {
         return productRepository.getProducts().values();
     }
 
     @Override
-    public Product findById(long id) {
+    public ProductPublic findById(long id) {
         return productRepository.getProductForId(id);
     }
     @Override
