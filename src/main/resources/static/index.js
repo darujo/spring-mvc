@@ -1,5 +1,5 @@
 angular.module('app',[]).controller("indexController",function ($scope, $http) {
-    const constPatch = 'http://localhost:8180/product';
+    const constPatch = 'http://localhost:8180/app';
 
     var showProducts = function (){
         document.getElementById("ProductList").style.display ="block";
@@ -17,6 +17,32 @@ angular.module('app',[]).controller("indexController",function ($scope, $http) {
                 showProducts();
             });
     };
+    $scope.findPage = function (diffPage){
+            var page = document.getElementById("Page").value - 1 + diffPage;
+            document.getElementById("Page").value =page + 1;
+            $http({
+                        url:constPatch + "/findPage",
+                        method: "get",
+                        params :{
+                            page : page,
+                            size : 10
+                        }
+                    })  .then(function (response){
+                            $scope.ProductList = response.data;
+                                            showProducts();
+                        });
+        };
+        $scope.filterPrice = function (){
+                    $http({
+                                url:constPatch + "/productsMinMax",
+                                method: "get",
+                                params : $scope.Price
+                            })  .then(function (response){
+                                    $scope.ProductList = response.data;
+                                                    showProducts();
+                                });
+                };
+
     var ProductIdEdit = null;
 
     $scope.createProduct = function (){
@@ -24,6 +50,7 @@ angular.module('app',[]).controller("indexController",function ($scope, $http) {
         document.getElementById("ProductName").value = "";
         document.getElementById("ProductPrice").value = 0;
         showFormEdit();
+        alert("");
     };
 
     $scope.editProduct = function (productId){
@@ -43,8 +70,8 @@ angular.module('app',[]).controller("indexController",function ($scope, $http) {
     };
     $scope.deleteProduct = function (productId){
         $http({
-            url:constPatch + "/deleteProduct",
-            method: "GET",
+            url:constPatch + "/product",
+            method: "Delete",
             params :{
                 id :productId
             }
@@ -53,6 +80,7 @@ angular.module('app',[]).controller("indexController",function ($scope, $http) {
             });
     };
     $scope.saveProduct = function (){
+        console.log($scope.Product);
         $http({
             url : constPatch + "/saveProduct",
             method : "POST",

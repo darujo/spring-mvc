@@ -1,48 +1,48 @@
 package ru.darujo.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.darujo.model.publicmodel.BuyerPublic;
-import ru.darujo.model.publicmodel.ProductPublic;
-import ru.darujo.service.ProductDao;
+import org.springframework.web.bind.annotation.*;
+import ru.darujo.exceptions.ResourceNotFoundException;
+import ru.darujo.model.Product;
+import ru.darujo.service.ProductService;
 
-import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 public class ProductController {
-    private  ProductDao productDao;
+    private ProductService productService;
 
     @Autowired
-    public void setProductDao(ProductDao productDao) {
-        this.productDao = productDao;
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping("/products")
-    public Collection<ProductPublic> index() {
-        return productDao.findAll();
+    public List<Product> index() {
+        return productService.findPage(0,10000);
     }
 
     @GetMapping("/editProduct")
-    public ProductPublic ProductEdit(long id) {
-        return productDao.findById(id);
+    public Product ProductEdit(@RequestParam long id) {
+        return productService.findById(id).orElseThrow(()->new ResourceNotFoundException("Продукт не найден"));
     }
 
     @PostMapping ("/saveProduct")
-    public void ProductSave(ProductPublic product){
-        productDao.saveOrUpdate(product);
+    public void ProductSave(Product product){
+        productService.saveProduct(product);
     }
-    @GetMapping("/deleteProduct")
+    @DeleteMapping("/product")
     public void deleteProduct(long id) {
-        productDao.deleteById(id);
+        productService.deleteProduct(id);
     }
 
-    @GetMapping("/findBuyerByProductId")
-    public Set<BuyerPublic> findBuyerByProductId(long id) {
-        return productDao.findBuyerByProductId(id);
+    @GetMapping("/findPage")
+    public List<Product> findPage(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10")int size ){
+        return productService.findPage(page,size);
     }
-
+    @GetMapping("/productsMinMax")
+    public List<Product> productsMinMax(@RequestParam(defaultValue = "0")double min,@RequestParam(defaultValue = "0")double max) {
+        return productService.productsByPriceBetween(min,max);
+    }
 
 }

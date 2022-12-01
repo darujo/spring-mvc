@@ -1,22 +1,23 @@
 package ru.darujo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.darujo.model.publicmodel.ProductPublic;
 
 import javax.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(value = { "chequeLines" })
 @Data
 @Entity
 @Table(name = "product")
 public class Product {
     @Id
     @Column(name = "id")
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "title")
     private String title;
@@ -26,7 +27,4 @@ public class Product {
 //    @Transient
     private List<ChequeLine> chequeLines;
 
-    public ProductPublic getPublicProduct(){
-        return new ProductPublic(id,title,price);
-    }
 }
