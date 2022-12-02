@@ -10,8 +10,24 @@
     <body>
         <div class="container" ng-controller="indexController">
             <div id="ProductList" class="headtextelem">
-                <button class="headbutton" ng-click="createProduct()" >Добавить продукт</button>
+                <div class="filter">
+                <form novalidate ng-submit="filterPrice()" ; class="filter">
+                    <input class="vvod" type="number" inputmode="decimal" id="PriceMin" value="1" ng-model="Price.min" />
 
+                   <p class="p-head"> < Цена < </p>
+                    <input class="vvod" type="number" inputmode="decimal" id="PriceMax" step="any" ng-model="Price.max"/>
+                    <!--                <input  type="hidden" id="ProductId" />-->
+                    <br>
+                    <button type="submit" class="headbutton" >Применить</button>
+
+                </form>
+                    <button class="headbutton" ng-click="createProduct()" >Добавить продукт</button>
+                </div>
+                <div class="filter">
+                    <button class="headbutton" ng-click="findPage(-1)" >PrevPage</button>
+                    <input class="vvod" type="number" id="Page" value="1"/>
+                    <button class="headbutton" ng-click="findPage(1)" >NextPage</button>
+                </div>
                 <table>
                     <tr>
                         <td>Наименование</td>
@@ -34,13 +50,13 @@
                 </table>
             </div>
             <div id="FormEdit" class ="divform">
-                <form action="">
-                    Наименование : <input class="vvod" type="text" id="ProductName" placeholder="Продукт"/>
+                <form novalidate ng-submit="saveProduct()" >
+                    Наименование : <input class="vvod" type="text" id="ProductName" placeholder="Продукт" ng-model="Product.title"/>
                     <br>
-                    Цена: <input class="vvod" type="number" inputmode="decimal" id="ProductPrice" step="any" />
+                    Цена: <input class="vvod" type="number" inputmode="decimal" id="ProductPrice" step="any" ng-model="Product.price"/>
     <!--                <input  type="hidden" id="ProductId" />-->
                     <br>
-                    <button ng-click="saveProduct()" class="button" >Сохранить</button>
+                    <button type="submit" class="button" >Сохранить</button>
                     <button ng-click="loadProducts()" class="button" >Вернуться к списку</button>
 
                 </form>

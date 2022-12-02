@@ -22,7 +22,6 @@ body {
 
 
 .headbutton {
-  margin-bottom: 10px;
   font-size: 16px;
   line-height: 26px;
   text-align: center;
@@ -35,6 +34,7 @@ body {
   padding: 15px 50px;
   display: inline-block;
   text-decoration: none;
+    margin: 10px;
 }
 .divform{
   margin-top: 30px;
@@ -75,3 +75,15 @@ TD {
     border: 1px solid #333; /* Граница вокруг ячеек */
     padding: 5px; /* Поля в ячейках */
    }
+.filter {
+    display: inline-flex;
+    width: -webkit-fill-available;
+}
+.p-head {
+
+width: inherit;
+margin: auto;
+    font-weight: 500;
+    font-size: 30px;
+    text-align: center;
+}
