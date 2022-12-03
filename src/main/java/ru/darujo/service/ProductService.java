@@ -2,10 +2,16 @@ package ru.darujo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import ru.darujo.dto.ProductDto;
 import ru.darujo.model.Product;
 import ru.darujo.repository.ProductRepository;
+import ru.darujo.repository.specifications.ProductsSpecifications;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -18,27 +24,28 @@ public class ProductService {
     public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
-//    public List<Product> findAll() {
-//        return productRepository.find();
-//    }
 
     public Optional<Product> findById(long id) {
         return productRepository.findById(id);
     }
 
-    public void saveProduct(Product product) {
-        productRepository.save(product);
+    public ProductDto saveProduct(Product product) {
+        return ProductDto.createProductDto(productRepository.save(product));
     }
     public void deleteProduct(Long id){
         productRepository.deleteById(id);
     }
-    public List<Product> productsByPriceBetween(double min, double max ){
-        return productRepository.findByPriceBetween( min, max == 0 ? Double.MAX_VALUE : max  );
-    }
 
-    public List<Product> findPage(int page, int size){
-        List<Product> products = new ArrayList<>();
-        productRepository.findPage(page,size).forEach(products::add);
-        return  products;
+
+    public Page<ProductDto> findProducts(BigDecimal min, Double max, int page, int size){
+        Specification<Product> specification = Specification.where(null);
+
+        if (min !=null){
+            specification = specification.and(ProductsSpecifications.priceGE(min));
+        }
+        if (max !=null){
+            specification = specification.and(ProductsSpecifications.priceLE(max));
+        }
+       return  productRepository.findAll(specification,PageRequest.of(page - 1,size)).map(ProductDto::createProductDto);
     }
 }

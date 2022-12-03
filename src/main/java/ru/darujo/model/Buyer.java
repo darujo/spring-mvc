@@ -3,7 +3,7 @@ package ru.darujo.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.darujo.model.publicmodel.BuyerPublic;
+import ru.darujo.dto.BuyerDto;
 
 import javax.persistence.*;
 import java.util.List;
@@ -22,7 +22,7 @@ public class Buyer {
     private String name;
     @OneToMany(mappedBy = "buyer")
     private List<Cheque> cheques;
-    public BuyerPublic getBuyerPublic(){
-        return new BuyerPublic(id,name);
+    public BuyerDto getBuyerPublic(){
+        return new BuyerDto(id,name);
     }
 }
