@@ -1,14 +1,17 @@
 package ru.darujo.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import ru.darujo.dto.ProductDto;
 import ru.darujo.exceptions.ResourceNotFoundException;
 import ru.darujo.model.Product;
 import ru.darujo.service.ProductService;
 
-import java.util.List;
+import java.math.BigDecimal;
 
-@RestController
+@RestController()
+@RequestMapping("/v1/products")
 public class ProductController {
     private ProductService productService;
 
@@ -17,32 +20,27 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/products")
-    public List<Product> index() {
-        return productService.findPage(0,10000);
+
+    @GetMapping("/{id}")
+    public ProductDto ProductEdit(@PathVariable long id) {
+        return ProductDto.createProductDto(productService.findById(id).orElseThrow(()->new ResourceNotFoundException("Продукт не найден")));
     }
 
-    @GetMapping("/editProduct")
-    public Product ProductEdit(@RequestParam long id) {
-        return productService.findById(id).orElseThrow(()->new ResourceNotFoundException("Продукт не найден"));
+    @PostMapping ("")
+    public ProductDto ProductSave(Product product){
+        return productService.saveProduct(product);
     }
-
-    @PostMapping ("/saveProduct")
-    public void ProductSave(Product product){
-        productService.saveProduct(product);
-    }
-    @DeleteMapping("/product")
-    public void deleteProduct(long id) {
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable long id) {
         productService.deleteProduct(id);
     }
 
-    @GetMapping("/findPage")
-    public List<Product> findPage(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10")int size ){
-        return productService.findPage(page,size);
-    }
-    @GetMapping("/productsMinMax")
-    public List<Product> productsMinMax(@RequestParam(defaultValue = "0")double min,@RequestParam(defaultValue = "0")double max) {
-        return productService.productsByPriceBetween(min,max);
+    @GetMapping("")
+    public Page<ProductDto> productsMinMax(@RequestParam(required = false) BigDecimal min ,
+                                           @RequestParam(required = false) Double max,
+                                           @RequestParam(defaultValue = "1") int page,
+                                           @RequestParam(defaultValue = "10")int size) {
+        return productService.findProducts(min,max,page,size);
     }
 
 }
