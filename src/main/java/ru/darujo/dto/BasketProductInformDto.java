@@ -11,4 +11,6 @@ public class BasketProductInformDto {
     private long id;
     private String name;
     private double quantity;
+    private double price;
+    private double priceAll;
 }

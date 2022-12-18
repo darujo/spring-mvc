@@ -8,6 +8,11 @@ import ru.darujo.repository.BasketRepository;
 import java.util.Optional;
 @Service
 public class BasketService {
+    private ProductService productService;
+    @Autowired
+    public void setProductService(ProductService productService){
+        this.productService =productService;
+    }
 
     private BasketRepository basketRepository;
     @Autowired
@@ -24,4 +29,5 @@ public class BasketService {
     public void deleteProduct(long basketId, long productId) {
         basketRepository.delProductToBasket(basketId,productId);
     }
+
 }

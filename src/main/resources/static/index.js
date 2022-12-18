@@ -89,15 +89,15 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     $scope.loadBasket = function () {
         $http.get(constPatch + "/baskets/" + basket)
             .then(function (response) {
-                $scope.ProductInform = response.data.productInformDtos;
+                $scope.Basket = response.data;
                 showProducts();
             });
 
     };
     $scope.addProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets",
-            method: "POST",
+            url: constPatch + "/baskets/add",
+            method: "GET",
             params: {
                 basketId: basket,
                 productId: productId
@@ -109,8 +109,8 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.delProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets/" + basket,
-            method: "DELETE",
+            url: constPatch + "/baskets/delete/" + basket,
+            method: "GET",
             params: {
                 productId: productId
             }
@@ -160,4 +160,5 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
 
 
     $scope.loadProducts();
+    $scope.loadBasket();
 })

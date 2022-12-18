@@ -23,12 +23,12 @@ public class BasketController {
         return BasketConvertor.getBasketDto(basketService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Корзина не найден")));
     }
 
-    @PostMapping("")
+    @GetMapping("/add")
     public BasketDto ProductSave(@RequestParam long basketId, @RequestParam long productId) {
         return BasketConvertor.getBasketDto(basketService.addProductToBasket(basketId, productId));
     }
 
-    @DeleteMapping("/{basketId}")
+    @GetMapping("/delete/{basketId}")
     public void deleteProduct(@PathVariable long basketId, @RequestParam long productId) {
         basketService.deleteProduct(basketId, productId);
     }
