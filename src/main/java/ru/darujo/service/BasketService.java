@@ -30,4 +30,7 @@ public class BasketService {
         basketRepository.delProductToBasket(basketId,productId);
     }
 
+    public void clearBasket(long id) {
+        basketRepository.clearBasket( id);
+    }
 }

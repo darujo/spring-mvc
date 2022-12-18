@@ -119,6 +119,14 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         });
 
     };
+    $scope.clearBasket = function () {
+        $http({
+            url: constPatch + "/baskets/clear/" + basket,
+            method: "GET"
+        }).then(function (response) {
+            $scope.loadBasket();
+        });
+    };
     $scope.tryToAuth = function () {
         $http.post(constGlobalPatch + '/auth', $scope.user)
             .then(function successCallback(response) {
