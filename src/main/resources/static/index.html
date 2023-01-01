@@ -78,7 +78,7 @@
             </tbody>
         </table>
         <h1>Корзина</h1>
-
+        <button class="headbutton" ng-click="clearBasket()">Очистить</button>
         <table>
             <tr>
                 <td>Наименование</td>
@@ -97,7 +97,7 @@
                 <td>
                     <button ng-click="addProductToBasket(product.id)"> +</button>
                 </td>
-                <td>{{product.quantity}} * {{product.price}} = {{product.priceAll}}</td>
+                <td>{{product.quantity}} x {{product.price}} = {{product.priceAll}}</td>
             </tr>
             <tr>
                 <td></td>
