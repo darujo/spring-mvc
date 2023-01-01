@@ -11,4 +11,6 @@ import java.util.List;
 public class BasketDto {
     private String name;
     private List<BasketProductInformDto> productInformDtos = new ArrayList<>();
+    private double price;
+
 }

@@ -78,16 +78,17 @@
             </tbody>
         </table>
         <h1>Корзина</h1>
-
+        <button class="headbutton" ng-click="clearBasket()">Очистить</button>
         <table>
             <tr>
                 <td>Наименование</td>
                 <td></td>
                 <td>Количество</td>
                 <td></td>
+                <td>Цена</td>
             </tr>
             <tbody>
-            <tr ng-repeat="product in ProductInform">
+            <tr ng-repeat="product in Basket.productInformDtos">
                 <td>{{product.name}}</td>
                 <td>
                     <button ng-click="delProductToBasket(product.id)"> -</button>
@@ -96,7 +97,16 @@
                 <td>
                     <button ng-click="addProductToBasket(product.id)"> +</button>
                 </td>
+                <td>{{product.quantity}} x {{product.price}} = {{product.priceAll}}</td>
             </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Итого:</td>
+                <td></td>
+                <td>{{Basket.price}}</td>
+            </tr>
+
             </tbody>
         </table>
     </div>

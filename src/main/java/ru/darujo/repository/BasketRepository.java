@@ -52,4 +52,8 @@ public class BasketRepository {
             }
         }
     }
+
+    public void clearBasket(long id) {
+        basket.getProductInforms().clear();
+    }
 }
