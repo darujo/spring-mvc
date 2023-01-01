@@ -17,9 +17,9 @@ public class BasketProductConvertor {
     }
 
     public static BasketProductInformDto getBasketProductInformDto(BasketProductInform basketProductInform) {
-        Product product = productService.findById(basketProductInform.getId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
+        Product product = productService.findById(basketProductInform.getProductId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
 
-        return new BasketProductInformDto(basketProductInform.getId(),
+        return new BasketProductInformDto(basketProductInform.getProductId(),
                                           product.getTitle(),
                                           basketProductInform.getQuantity(),
                                           product.getPrice(),

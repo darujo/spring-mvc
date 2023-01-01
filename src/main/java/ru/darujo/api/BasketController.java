@@ -5,7 +5,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.darujo.convertor.BasketConvertor;
 import ru.darujo.dto.BasketDto;
 import ru.darujo.exceptions.ResourceNotFoundException;
+import ru.darujo.model.User;
 import ru.darujo.service.BasketService;
+import ru.darujo.service.UserService;
+
+import java.security.Principal;
 
 @RestController()
 @RequestMapping("/v1/baskets")
@@ -18,22 +22,34 @@ public class BasketController {
         this.basketService = basketService;
     }
 
-    @GetMapping("/{id}")
-    public BasketDto getBasket(@PathVariable long id) {
-        return BasketConvertor.getBasketDto(basketService.findById(id).orElseThrow(() -> new ResourceNotFoundException("Корзина не найден")));
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
-    @GetMapping("/clear/{id}")
-    public void clearBasket(@PathVariable long id) {
-        basketService.clearBasket(id);
+
+    @GetMapping("")
+    public BasketDto getBasket(Principal principal) {
+        User user = userService.findByUserName(principal.getName()).orElseThrow(() -> new RuntimeException("Unable to find user by username: " + principal.getName()));
+        return BasketConvertor.getBasketDto(basketService.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("Корзина не найден")));
+    }
+
+    @GetMapping("/clear")
+    public void clearBasket(Principal principal) {
+        User user = userService.findByUserName(principal.getName()).orElseThrow(() -> new RuntimeException("Unable to find user by username: " + principal.getName()));
+        basketService.clearBasket(user.getId());
     }
 
     @GetMapping("/add")
-    public BasketDto ProductSave(@RequestParam long basketId, @RequestParam long productId) {
-        return BasketConvertor.getBasketDto(basketService.addProductToBasket(basketId, productId));
+    public BasketDto ProductSave(Principal principal, @RequestParam long productId) {
+        User user = userService.findByUserName(principal.getName()).orElseThrow(() -> new RuntimeException("Unable to find user by username: " + principal.getName()));
+        return BasketConvertor.getBasketDto(basketService.addProductToBasket(user.getId(), productId));
     }
 
-    @GetMapping("/delete/{basketId}")
-    public void deleteProduct(@PathVariable long basketId, @RequestParam long productId) {
-        basketService.deleteProduct(basketId, productId);
+    @GetMapping("/delete")
+    public void deleteProduct(Principal principal, @RequestParam long productId) {
+        User user = userService.findByUserName(principal.getName()).orElseThrow(() -> new RuntimeException("Unable to find user by username: " + principal.getName()));
+        basketService.deleteProduct(user.getId(), productId);
     }
 }
