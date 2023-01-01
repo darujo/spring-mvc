@@ -1,4 +1,5 @@
-angular.module('app', []).controller("indexController", function ($scope, $http) {
+angular.module('app', ['ngStorage']).controller("indexController", function ($scope, $http, $localStorage) {
+    const constGlobalPatch = 'http://localhost:8180/app';
     const constPatch = 'http://localhost:8180/app/v1';
 
     var showProducts = function () {
@@ -9,6 +10,10 @@ angular.module('app', []).controller("indexController", function ($scope, $http)
         document.getElementById("ProductList").style.display = "none";
         document.getElementById("FormEdit").style.display = "block";
     };
+    if ($localStorage.authUser) {
+        $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.authUser.token;
+    }
+
 
     $scope.loadProducts = function () {
         $scope.findPage(0);
@@ -84,15 +89,15 @@ angular.module('app', []).controller("indexController", function ($scope, $http)
     $scope.loadBasket = function () {
         $http.get(constPatch + "/baskets/" + basket)
             .then(function (response) {
-                $scope.ProductInform = response.data.productInformDtos;
+                $scope.Basket = response.data;
                 showProducts();
             });
 
     };
     $scope.addProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets",
-            method: "POST",
+            url: constPatch + "/baskets/add",
+            method: "GET",
             params: {
                 basketId: basket,
                 productId: productId
@@ -104,8 +109,8 @@ angular.module('app', []).controller("indexController", function ($scope, $http)
     };
     $scope.delProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets/" + basket,
-            method: "DELETE",
+            url: constPatch + "/baskets/delete/" + basket,
+            method: "GET",
             params: {
                 productId: productId
             }
@@ -114,5 +119,54 @@ angular.module('app', []).controller("indexController", function ($scope, $http)
         });
 
     };
+    $scope.clearBasket = function () {
+        $http({
+            url: constPatch + "/baskets/clear/" + basket,
+            method: "GET"
+        }).then(function (response) {
+            $scope.loadBasket();
+        });
+    };
+    $scope.tryToAuth = function () {
+        $http.post(constGlobalPatch + '/auth', $scope.user)
+            .then(function successCallback(response) {
+                if (response.data.token) {
+                    $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
+                    $localStorage.authUser = {username: $scope.user.username, token: response.data.token};
+
+                    $scope.user.username = null;
+                    $scope.user.password = null;
+                }
+                $scope.loadProducts();
+                $scope.loadBasket();
+            }, function errorCallback(response) {
+            });
+    };
+
+    $scope.tryToLogout = function () {
+        $scope.clearUser();
+        if ($scope.user.username) {
+            $scope.user.username = null;
+        }
+        if ($scope.user.password) {
+            $scope.user.password = null;
+        }
+    };
+
+    $scope.clearUser = function () {
+        delete $localStorage.authUser;
+        $http.defaults.headers.common.Authorization = '';
+    };
+
+    $scope.isUserLoggedIn = function () {
+        if ($localStorage.authUser) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+
     $scope.loadProducts();
+    $scope.loadBasket();
 })

@@ -18,7 +18,6 @@ public class JwtTokenUtils {
    private String secretKey;
    @Value("${jwt.lifeTimeToken}")
    private Integer lifeTimeToken;
-
    private <T> T getClaimFormToken(String token, Function<Claims,T> callback){
       Claims claims =getAllClamsForToken(token);
       return callback.apply(claims);

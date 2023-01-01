@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.darujo.dto.BasketProductInformDto;
 import ru.darujo.model.BasketProductInform;
+import ru.darujo.model.Product;
 import ru.darujo.service.ProductService;
 
 @Component
@@ -16,9 +17,13 @@ public class BasketProductConvertor {
     }
 
     public static BasketProductInformDto getBasketProductInformDto(BasketProductInform basketProductInform) {
+        Product product = productService.findById(basketProductInform.getId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
+
         return new BasketProductInformDto(basketProductInform.getId(),
-                productService.findById(basketProductInform.getId()).orElseThrow(() -> new RuntimeException("Продукт потерян")).getTitle(),
-                basketProductInform.getQuantity());
+                                          product.getTitle(),
+                                          basketProductInform.getQuantity(),
+                                          product.getPrice(),
+                                   product.getPrice() * basketProductInform.getQuantity());
     }
 
     public static BasketProductInform getBasketProductInform(BasketProductInformDto basketProductInform) {

@@ -3,12 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+
+<script src="index.js"></script>
     <title>Продукт</title>
     <link rel="stylesheet" href="style.css?v=1.9">
 </head>
 <body>
 <div class="container" ng-controller="indexController">
+    <div class="" id="navbarNav">
+        <ul class="">
+            <li class="nav-item" ng-show="!isUserLoggedIn()">
+                <form class="" ng-submit="tryToAuth()">
+                    <div class="input-group input-group-sm" style="padding: 4px;">
+                        <input id="navLoginField" class="vvod" ng-model="user.username" type="text"
+                               aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+
+                        <input id="navPasswordField" class="vvod" ng-model="user.password" type="password"
+                               aria-describedby="inputGroup-sizing-sm" style="margin-left: 10px;">
+
+                        <button id="navLoginSubmit" class="headbutton"
+                                style="margin-left: 10px;" type="submit">Войти
+                        </button>
+                    </div>
+                </form>
+            </li>
+            <li class="nav-item" ng-show="isUserLoggedIn()" style="padding: 4px;">
+                <button class="headbutton" ng-click="tryToLogout()">Выйти</button>
+            </li>
+        </ul>
+    </div>
     <div id="ProductList" class="headtextelem">
         <div class="filter">
             <form novalidate ng-submit="filterPrice()" ; class="filter">
@@ -54,16 +78,17 @@
             </tbody>
         </table>
         <h1>Корзина</h1>
-
+        <button class="headbutton" ng-click="clearBasket()">Очистить</button>
         <table>
             <tr>
                 <td>Наименование</td>
                 <td></td>
                 <td>Количество</td>
                 <td></td>
+                <td>Цена</td>
             </tr>
             <tbody>
-            <tr ng-repeat="product in ProductInform">
+            <tr ng-repeat="product in Basket.productInformDtos">
                 <td>{{product.name}}</td>
                 <td>
                     <button ng-click="delProductToBasket(product.id)"> -</button>
@@ -72,7 +97,16 @@
                 <td>
                     <button ng-click="addProductToBasket(product.id)"> +</button>
                 </td>
+                <td>{{product.quantity}} x {{product.price}} = {{product.priceAll}}</td>
             </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>Итого:</td>
+                <td></td>
+                <td>{{Basket.price}}</td>
+            </tr>
+
             </tbody>
         </table>
     </div>
