@@ -16,23 +16,29 @@ import ru.darujo.utils.JwtTokenUtils;
 @RestController
 public class AuthController {
     private UserService userService;
+
     @Autowired
-    public void setUserService(UserService userService){
-        this.userService =userService;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
+
     private JwtTokenUtils jwtTokenUtils;
+
     @Autowired
-    public void setJwtTokenUtils(JwtTokenUtils jwtTokenUtils){
+    public void setJwtTokenUtils(JwtTokenUtils jwtTokenUtils) {
         this.jwtTokenUtils = jwtTokenUtils;
     }
+
     private AuthenticationManager authenticationManager;
+
     @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager){
-        this.authenticationManager =authenticationManager;
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
     }
+
     @PostMapping("/auth")
-    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest jwtRequest){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(),jwtRequest.getPassword()));
+    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest jwtRequest) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
         UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getUsername());
         String token = jwtTokenUtils.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));

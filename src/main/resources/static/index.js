@@ -10,8 +10,21 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         document.getElementById("ProductList").style.display = "none";
         document.getElementById("FormEdit").style.display = "block";
     };
-    if ($localStorage.authUser) {
+    if ($localStorage.authUser){
         $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.authUser.token;
+        try {
+            let jwt = $localStorage.authUser.token;
+            let payLoad = JSON.parse(atob(jwt.split(".")[1]));
+            let currTime = parseInt(new Date().getTime() / 1000);
+            if(currTime > payLoad.exp){
+                console.log("токен просрочен");
+                delete $localStorage.authUser;
+                $http.defaults.headers.common.Authorization = '';
+            }
+        }
+        catch (e){
+
+        }
     }
 
 
@@ -85,9 +98,9 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
             $scope.loadProducts();
         });
     };
-    var basket = "1";
+
     $scope.loadBasket = function () {
-        $http.get(constPatch + "/baskets/" + basket)
+        $http.get(constPatch + "/baskets")
             .then(function (response) {
                 $scope.Basket = response.data;
                 showProducts();
@@ -99,7 +112,6 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
             url: constPatch + "/baskets/add",
             method: "GET",
             params: {
-                basketId: basket,
                 productId: productId
             }
         }).then(function (response) {
@@ -109,7 +121,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.delProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets/delete/" + basket,
+            url: constPatch + "/baskets/delete",
             method: "GET",
             params: {
                 productId: productId
@@ -121,7 +133,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.clearBasket = function () {
         $http({
-            url: constPatch + "/baskets/clear/" + basket,
+            url: constPatch + "/baskets/clear",
             method: "GET"
         }).then(function (response) {
             $scope.loadBasket();
@@ -166,6 +178,14 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         }
     };
 
+    $scope.saveOrder = function () {
+        $http.get(constPatch + "/orders/save")
+            .then(function (response) {
+                $scope.Basket = null;
+                alert("Заказ оформлен")
+            });
+
+    };
 
     $scope.loadProducts();
     $scope.loadBasket();
