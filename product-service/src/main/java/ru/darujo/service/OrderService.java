@@ -2,7 +2,10 @@ package ru.darujo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.darujo.dto.BasketDto;
+import ru.darujo.dto.BasketProductInformDto;
 import ru.darujo.exceptions.ResourceNotFoundException;
+import ru.darujo.integration.BasketServiceIntegration;
 import ru.darujo.model.*;
 import ru.darujo.repository.OrderRepository;
 
@@ -12,10 +15,10 @@ import java.util.List;
 
 @Service
 public class OrderService {
-    private BasketService basketService;
+    private BasketServiceIntegration basketServiceIntegration;
     @Autowired
-    public void setBasketService(BasketService basketService){
-        this.basketService = basketService;
+    public void setBasketServiceIntegration(BasketServiceIntegration basketServiceIntegration){
+        this.basketServiceIntegration = basketServiceIntegration;
     }
     private OrderRepository orderRepository;
     @Autowired
@@ -30,24 +33,24 @@ public class OrderService {
     }
     @Transactional
     public void createOrderToBasket(User user){
-        Basket basket = basketService.findById(user.getId()).orElseThrow(()-> new ResourceNotFoundException("Корзина не найдена"));
+        BasketDto basket = basketServiceIntegration.getBasket().orElseThrow(()-> new ResourceNotFoundException("Корзина не найдена"));
         Order order = new Order();
         order.setUser(user);
         List<OrderItem> orderItems = new ArrayList<>();
 
-        for (BasketProductInform basketProductInform: basket.getProductInforms()) {
-            Product product = productService.findById(basketProductInform.getProductId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
+        for (BasketProductInformDto basketProductInformDto: basket.getProductInformDtos()) {
+            Product product = productService.findById(basketProductInformDto.getProductId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
 
             OrderItem orderItem = new OrderItem();
             orderItem.setProductId(product.getId());
-            orderItem.setQuantity(basketProductInform.getQuantity());
+            orderItem.setQuantity(basketProductInformDto.getQuantity());
             orderItem.setPrice(product.getPrice());
             orderItem.setOrder(order);
             orderItems.add(orderItem);
         }
         order.setOrderItems(orderItems);
         orderRepository.save(order);
-        basketService.clearBasket(user.getId());
+        basketServiceIntegration.clearBasket();
 
     }
 

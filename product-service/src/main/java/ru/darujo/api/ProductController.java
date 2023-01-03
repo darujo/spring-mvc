@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 
 @RestController()
 @RequestMapping("/v1/products")
+@CrossOrigin("*")
 public class ProductController {
     private ProductService productService;
 
