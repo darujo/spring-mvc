@@ -1,7 +1,7 @@
 angular.module('app', ['ngStorage']).controller("indexController", function ($scope, $http, $localStorage) {
     const constGlobalPatch = 'http://localhost:8180/app';
     const constPatch = 'http://localhost:8180/app/v1';
-
+    const constPatchBasket = 'http://localhost:8182/app-basket/v1/baskets';
     var showProducts = function () {
         document.getElementById("ProductList").style.display = "block";
         document.getElementById("FormEdit").style.display = "none";
@@ -100,7 +100,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
 
     $scope.loadBasket = function () {
-        $http.get(constPatch + "/baskets")
+        $http.get(constPatchBasket)
             .then(function (response) {
                 $scope.Basket = response.data;
                 showProducts();
@@ -109,7 +109,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.addProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets/add",
+            url: constPatchBasket + "/add",
             method: "GET",
             params: {
                 productId: productId
@@ -121,7 +121,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.delProductToBasket = function (productId) {
         $http({
-            url: constPatch + "/baskets/delete",
+            url: constPatchBasket + "/delete",
             method: "GET",
             params: {
                 productId: productId
@@ -133,7 +133,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.clearBasket = function () {
         $http({
-            url: constPatch + "/baskets/clear",
+            url: constPatchBasket + "/clear",
             method: "GET"
         }).then(function (response) {
             $scope.loadBasket();
