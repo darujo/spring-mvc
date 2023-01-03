@@ -2,6 +2,7 @@ package ru.darujo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.darujo.integration.ProductServiceIntegration;
 import ru.darujo.model.Basket;
 import ru.darujo.repository.BasketRepository;
 
@@ -9,11 +10,11 @@ import java.util.Optional;
 
 @Service
 public class BasketService {
-    private ProductService productService;
+    private ProductServiceIntegration productServiceIntegration;
 
     @Autowired
-    public void setProductService(ProductService productService) {
-        this.productService = productService;
+    public void setProductServiceIntegration(ProductServiceIntegration productServiceIntegration) {
+        this.productServiceIntegration = productServiceIntegration;
     }
 
     private BasketRepository basketRepository;

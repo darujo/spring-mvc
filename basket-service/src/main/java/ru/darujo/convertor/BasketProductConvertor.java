@@ -3,21 +3,21 @@ package ru.darujo.convertor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.darujo.dto.BasketProductInformDto;
+import ru.darujo.dto.ProductDto;
+import ru.darujo.integration.ProductServiceIntegration;
 import ru.darujo.model.BasketProductInform;
-import ru.darujo.model.Product;
-import ru.darujo.service.ProductService;
 
 @Component
 public class BasketProductConvertor {
-    private static ProductService productService;
+    private static ProductServiceIntegration productServiceIntegration;
 
     @Autowired
-    public void setProductService(ProductService productServiceBeen) {
-        productService = productServiceBeen;
+    public void setProductServiceIntegration(ProductServiceIntegration productServiceIntegration) {
+        this.productServiceIntegration = productServiceIntegration;
     }
 
     public static BasketProductInformDto getBasketProductInformDto(BasketProductInform basketProductInform) {
-        Product product = productService.findById(basketProductInform.getProductId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
+        ProductDto product = productServiceIntegration.findById(basketProductInform.getProductId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
 
         return new BasketProductInformDto(basketProductInform.getProductId(),
                                           product.getTitle(),
@@ -27,7 +27,7 @@ public class BasketProductConvertor {
     }
 
     public static BasketProductInform getBasketProductInform(BasketProductInformDto basketProductInform) {
-        return new BasketProductInform(basketProductInform.getId(),
+        return new BasketProductInform(basketProductInform.getProductId(),
                 basketProductInform.getQuantity());
     }
 }
