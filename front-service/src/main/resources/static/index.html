@@ -89,13 +89,13 @@
             </tr>
             <tbody>
             <tr ng-repeat="product in Basket.productInformDtos">
-                <td>{{product.name}}</td>
+                <td>{{product.productName}}</td>
                 <td>
-                    <button ng-click="delProductToBasket(product.id)"> -</button>
+                    <button ng-click="delProductToBasket(product.productId)"> -</button>
                 </td>
                 <td>{{product.quantity}}</td>
                 <td>
-                    <button ng-click="addProductToBasket(product.id)"> +</button>
+                    <button ng-click="addProductToBasket(product.productId)"> +</button>
                 </td>
                 <td>{{product.quantity}} x {{product.price}} = {{product.priceAll}}</td>
             </tr>

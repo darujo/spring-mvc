@@ -10,7 +10,7 @@ import java.security.Principal;
 
 @RestController()
 @RequestMapping("/v1/orders")
-
+@CrossOrigin("*")
 public class OrderController {
     private OrderService orderService;
 

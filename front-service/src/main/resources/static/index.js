@@ -120,6 +120,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
 
     };
     $scope.delProductToBasket = function (productId) {
+        console.log(productId);
         $http({
             url: constPatchBasket + "/delete",
             method: "GET",
