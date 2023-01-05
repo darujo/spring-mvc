@@ -1,0 +1,9 @@
+server:
+  port: 8182
+  servlet:
+    context-path: /app-basket
+spring:
+    main:
+      banner-mode: off
+
+
