@@ -1,7 +1,8 @@
 angular.module('app', ['ngStorage']).controller("indexController", function ($scope, $http, $localStorage) {
-    const constGlobalPatch = 'http://localhost:8180/app';
-    const constPatch = 'http://localhost:8180/app/v1';
-    const constPatchBasket = 'http://localhost:8182/app-basket/v1/baskets';
+    const constPatchAuth    = 'http://localhost:5555';
+    const constPatchOrder   = 'http://localhost:5555/order-service/v1';
+    const constPatchProduct = 'http://localhost:5555/product-service/v1';
+    const constPatchBasket  = 'http://localhost:5555/basket-service/v1/baskets';
     var showProducts = function () {
         document.getElementById("ProductList").style.display = "block";
         document.getElementById("FormEdit").style.display = "none";
@@ -33,12 +34,10 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     var Price;
     $scope.findPage = function (diffPage) {
-        console.log(diffPage);
         var page = parseInt(document.getElementById("Page").value) + diffPage;
-        console.log(page);
         document.getElementById("Page").value = page;
         $http({
-            url: constPatch + "/products",
+            url: constPatchProduct + "/products",
             method: "get",
             params: {
                 page: page,
@@ -65,36 +64,35 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         ProductIdEdit = null;
         document.getElementById("ProductName").value = "";
         document.getElementById("ProductPrice").value = 0;
+        $scope.Product.id = null;
         showFormEdit();
 
     };
 
     $scope.editProduct = function (productId) {
-        $http.get(constPatch + "/products/" + productId)
+        $http.get(constPatchProduct + "/products/" + productId)
             .then(function (response) {
                 ProductIdEdit = response.data.id;
+                $scope.Product = response.data;
+                console.log($scope.Product);
+
                 document.getElementById("ProductName").value = response.data.title;
                 document.getElementById("ProductPrice").value = response.data.price;
                 showFormEdit();
             });
     };
     $scope.deleteProduct = function (productId) {
-        $http.delete(constPatch + "/products/" + productId)
+        $http.delete(constPatchProduct + "/products/" + productId)
             .then(function (response) {
                 $scope.loadProducts();
             });
     };
     $scope.saveProduct = function () {
         console.log($scope.Product);
-        $http({
-            url: constPatch + "/products",
-            method: "POST",
-            params: {
-                id: ProductIdEdit ? ProductIdEdit : null,
-                title: document.getElementById("ProductName").value,
-                price: document.getElementById("ProductPrice").value
-            }
-        }).then(function (response) {
+        console.log(ProductIdEdit);
+
+        $http.post(constPatchProduct + "/products",$scope.Product)
+            .then(function (response) {
             $scope.loadProducts();
         });
     };
@@ -120,6 +118,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
 
     };
     $scope.delProductToBasket = function (productId) {
+        console.log(productId);
         $http({
             url: constPatchBasket + "/delete",
             method: "GET",
@@ -140,7 +139,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         });
     };
     $scope.tryToAuth = function () {
-        $http.post(constGlobalPatch + '/auth', $scope.user)
+        $http.post(constPatchAuth + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
                     $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
@@ -179,7 +178,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
 
     $scope.saveOrder = function () {
-        $http.get(constPatch + "/orders/save")
+        $http.get(constPatchOrder+ "/orders/save")
             .then(function (response) {
                 $scope.Basket = null;
                 alert("Заказ оформлен")

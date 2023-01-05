@@ -17,13 +17,13 @@ public class BasketProductConvertor {
     }
 
     public static BasketProductInformDto getBasketProductInformDto(BasketProductInform basketProductInform) {
-        ProductDto product = productServiceIntegration.findById(basketProductInform.getProductId()).orElseThrow(() -> new RuntimeException("Продукт потерян"));
+        ProductDto product = productServiceIntegration.findById(basketProductInform.getProductId());
 
         return new BasketProductInformDto(basketProductInform.getProductId(),
                                           product.getTitle(),
                                           basketProductInform.getQuantity(),
                                           product.getPrice(),
-                                   product.getPrice() * basketProductInform.getQuantity());
+                                   product.getPrice().multiply( basketProductInform.getQuantity()));
     }
 
     public static BasketProductInform getBasketProductInform(BasketProductInformDto basketProductInform) {

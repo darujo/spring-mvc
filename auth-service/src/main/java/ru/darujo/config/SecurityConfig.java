@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
@@ -20,11 +21,11 @@ import ru.darujo.service.UserService;
 @Slf4j
 @EnableGlobalMethodSecurity(prePostEnabled = true,securedEnabled = true,jsr250Enabled = true)
 public class SecurityConfig  {
-    private JwtRequestFilter jwtRequestFilter;
-    @Autowired
-    public void setJwtRequestFilter(JwtRequestFilter jwtRequestFilter){
-        this.jwtRequestFilter = jwtRequestFilter;
-    }
+//    private JwtRequestFilter jwtRequestFilter;
+//    @Autowired
+//    public void setJwtRequestFilter(JwtRequestFilter jwtRequestFilter){
+//        this.jwtRequestFilter = jwtRequestFilter;
+//    }
     private UserService userService;
     @Autowired
     public void setUserService(UserService userService){
@@ -33,14 +34,14 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
+                .cors().disable()
                 .authorizeHttpRequests()
-                .antMatchers("/v1/orderss").authenticated()
-//                .antMatchers("/v1/products").permitAll()
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
                 .and()
-
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .logout()
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
@@ -48,7 +49,7 @@ public class SecurityConfig  {
                 .exceptionHandling()
                 .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 ;
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
@@ -60,6 +61,5 @@ public class SecurityConfig  {
         daoAuthenticationProvider.setUserDetailsService(userService);
         return new ProviderManager(daoAuthenticationProvider);
     }
-
 
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class Product {
     @Column(name = "title")
     private String title;
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
     @OneToMany(mappedBy = "product")
 //    @Transient
     private List<ChequeLine> chequeLines;

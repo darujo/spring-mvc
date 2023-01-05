@@ -9,7 +9,7 @@ public class ProductsSpecifications {
     public static Specification<Product> priceGE(BigDecimal price){
         return ((root, query, criteriaBuilder) -> criteriaBuilder.greaterThanOrEqualTo(root.get("price"),price));
     }
-    public static Specification<Product> priceLE(double price){
+    public static Specification<Product> priceLE(BigDecimal price){
         return ((root, query, criteriaBuilder) -> criteriaBuilder.le(root.get("price"),price));
     }
     public static Specification<Product> titleLike(String title){

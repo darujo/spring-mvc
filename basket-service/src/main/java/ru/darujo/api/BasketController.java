@@ -9,7 +9,6 @@ import ru.darujo.exceptions.ResourceNotFoundException;
 import ru.darujo.service.BasketService;
 @RestController()
 @RequestMapping("/v1/baskets")
-@CrossOrigin("*")
 public class BasketController {
     private BasketService basketService;
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.6/ngStorage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
 
 <script src="index.js"></script>
     <title>Продукт</title>
@@ -89,13 +89,13 @@
             </tr>
             <tbody>
             <tr ng-repeat="product in Basket.productInformDtos">
-                <td>{{product.name}}</td>
+                <td>{{product.productName}}</td>
                 <td>
-                    <button ng-click="delProductToBasket(product.id)"> -</button>
+                    <button ng-click="delProductToBasket(product.productId)"> -</button>
                 </td>
                 <td>{{product.quantity}}</td>
                 <td>
-                    <button ng-click="addProductToBasket(product.id)"> +</button>
+                    <button ng-click="addProductToBasket(product.productId)"> +</button>
                 </td>
                 <td>{{product.quantity}} x {{product.price}} = {{product.priceAll}}</td>
             </tr>
