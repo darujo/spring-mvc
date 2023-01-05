@@ -1,23 +1,25 @@
 package ru.darujo.model;
 
+import java.math.BigDecimal;
+
 public class BasketProductInform {
 
     private long productId;
-    private double quantity;
+    private BigDecimal quantity;
 
     public long getProductId() {
         return productId;
     }
 
-    public double getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
-    public BasketProductInform(long productId, double quantity) {
+    public BasketProductInform(long productId, BigDecimal quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

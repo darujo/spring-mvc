@@ -37,7 +37,7 @@ public class ProductService {
     }
 
 
-    public Page<Product> findProducts(BigDecimal min, Double max, int page, int size) {
+    public Page<Product> findProducts(BigDecimal min, BigDecimal max, int page, int size) {
         Specification<Product> specification = Specification.where(null);
 
         if (min != null) {

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import ru.darujo.model.Basket;
 import ru.darujo.model.BasketProductInform;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,10 +32,10 @@ public class BasketRepository {
             }
         }
         if (basketProductInform == null) {
-            basketProductInform = new BasketProductInform(productId, 1);
+            basketProductInform = new BasketProductInform(productId, BigDecimal.ONE);
             basket.getProductInforms().add(basketProductInform);
         } else {
-            basketProductInform.setQuantity(basketProductInform.getQuantity() + 1);
+            basketProductInform.setQuantity(basketProductInform.getQuantity().add(BigDecimal.ONE));
         }
         return basket;
     }
@@ -44,8 +45,8 @@ public class BasketRepository {
         for (int i = 0; i < productInforms.size(); i++) {
             BasketProductInform productInform = productInforms.get(i);
             if (productInform.getProductId() == productId) {
-                productInform.setQuantity(productInform.getQuantity() - 1);
-                if (productInform.getQuantity() == 0) {
+                productInform.setQuantity(productInform.getQuantity().subtract(BigDecimal.ONE ));
+                if (productInform.getQuantity().equals(BigDecimal.ZERO) ) {
                     productInforms.remove(productInform);
                 }
                 break;

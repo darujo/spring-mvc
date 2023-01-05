@@ -23,7 +23,7 @@ public class BasketProductConvertor {
                                           product.getTitle(),
                                           basketProductInform.getQuantity(),
                                           product.getPrice(),
-                                   product.getPrice() * basketProductInform.getQuantity());
+                                   product.getPrice().multiply( basketProductInform.getQuantity()));
     }
 
     public static BasketProductInform getBasketProductInform(BasketProductInformDto basketProductInform) {

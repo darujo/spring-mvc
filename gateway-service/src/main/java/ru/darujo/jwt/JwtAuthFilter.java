@@ -31,12 +31,15 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            if (isAuthMissing(request)){
+            if (!isAuthMissing(request)){
                 final String token = getAuthHeaders(request);
                 if(jwtUtil.isInvalid(token)){
                     return this.onError(exchange,"Не правильный заголовок авторизации", HttpStatus.UNAUTHORIZED);
                 }
                 populateRequestHeader(exchange,token);
+            }
+            else {
+                return this.onError(exchange,"Токен отсутсвует", HttpStatus.UNAUTHORIZED);
             }
             return chain.filter(exchange);
         };
@@ -61,9 +64,9 @@ public class JwtAuthFilter extends AbstractGatewayFilterFactory<JwtAuthFilter.Co
     }
 
     private boolean isAuthMissing(ServerHttpRequest request) {
-        if(request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
+        if(!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)){
             return true;
         }
-        return request.getHeaders().getOrEmpty(HttpHeaders.AUTHORIZATION).get(0).startsWith("Bearer");
+        return !request.getHeaders().getOrEmpty(HttpHeaders.AUTHORIZATION).get(0).startsWith("Bearer");
     }
 }

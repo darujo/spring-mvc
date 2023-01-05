@@ -4,10 +4,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
-@Service
+
+@Component
 public class JwtUtil {
     @Value("${jwt.secretKey}")
     private String secretKey;

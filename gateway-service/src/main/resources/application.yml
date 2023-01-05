@@ -7,12 +7,13 @@ spring:
   cloud:
     gateway:
       globalcors:
-        corsConfigurations:
+        cors-configurations:
           '[/**]':
             allowedOrigins: "http://localhost:3000"
             allowedMethods:
-              - Get
-              - Post
+              - GET
+              - POST
+              - DELETE
             allowedHeaders: "*"
       routes:
         - id: product-service
@@ -22,7 +23,7 @@ spring:
           filters:
             - StripPrefix=1
             - PrefixPath=/app
-            - JwtAuthFilter
+#            - JwtAuthFilter
         - id: front-service
           uri: "http://localhost:8181"
           predicates:
@@ -32,7 +33,7 @@ spring:
             - PrefixPath=/app-front/
             - JwtAuthFilter
         - id: basket-service
-          uri: "http://localhost:3000"
+          uri: "http://localhost:8182"
           predicates:
             - Path=/basket-service/**
           filters:

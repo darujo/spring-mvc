@@ -1,13 +1,14 @@
 package ru.darujo.dto;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BasketDto {
     private String name;
     private List<BasketProductInformDto> productInformDtos = new ArrayList<>();
-    private double price;
+    private BigDecimal price;
 
     public void setName(String name) {
         this.name = name;
@@ -17,7 +18,7 @@ public class BasketDto {
         this.productInformDtos = productInformDtos;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -29,7 +30,7 @@ public class BasketDto {
         return productInformDtos;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 

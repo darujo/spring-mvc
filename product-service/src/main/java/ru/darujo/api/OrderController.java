@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.darujo.service.OrderService;
 
-import java.security.Principal;
-
 @RestController()
 @RequestMapping("/v1/orders")
-@CrossOrigin("*")
 public class OrderController {
     private OrderService orderService;
 

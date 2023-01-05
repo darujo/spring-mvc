@@ -34,9 +34,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     var Price;
     $scope.findPage = function (diffPage) {
-        console.log(diffPage);
         var page = parseInt(document.getElementById("Page").value) + diffPage;
-        console.log(page);
         document.getElementById("Page").value = page;
         $http({
             url: constPatchProduct + "/products",
@@ -66,6 +64,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         ProductIdEdit = null;
         document.getElementById("ProductName").value = "";
         document.getElementById("ProductPrice").value = 0;
+        $scope.Product.id = null;
         showFormEdit();
 
     };
@@ -74,6 +73,9 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         $http.get(constPatchProduct + "/products/" + productId)
             .then(function (response) {
                 ProductIdEdit = response.data.id;
+                $scope.Product = response.data;
+                console.log($scope.Product);
+
                 document.getElementById("ProductName").value = response.data.title;
                 document.getElementById("ProductPrice").value = response.data.price;
                 showFormEdit();
@@ -87,15 +89,10 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
     };
     $scope.saveProduct = function () {
         console.log($scope.Product);
-        $http({
-            url: constPatchProduct + "/products",
-            method: "POST",
-            params: {
-                id: ProductIdEdit ? ProductIdEdit : null,
-                title: document.getElementById("ProductName").value,
-                price: document.getElementById("ProductPrice").value
-            }
-        }).then(function (response) {
+        console.log(ProductIdEdit);
+
+        $http.post(constPatchProduct + "/products",$scope.Product)
+            .then(function (response) {
             $scope.loadProducts();
         });
     };

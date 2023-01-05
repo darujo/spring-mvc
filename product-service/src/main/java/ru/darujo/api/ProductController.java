@@ -26,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping("")
-    public ProductDto ProductSave(ProductDto productDto) {
+    public ProductDto ProductSave(@RequestBody ProductDto productDto) {
         return ProductConvertor.getProductDto(productService.saveProduct(ProductConvertor.getProduct(productDto)));
     }
 
@@ -37,7 +37,7 @@ public class ProductController {
 
     @GetMapping("")
     public Page<ProductDto> productsMinMax(@RequestParam(required = false) BigDecimal min,
-                                           @RequestParam(required = false) Double max,
+                                           @RequestParam(required = false) BigDecimal max,
                                            @RequestParam(defaultValue = "1") int page,
                                            @RequestParam(defaultValue = "10") int size) {
         return productService.findProducts(min, max, page, size).map(ProductConvertor::getProductDto);
