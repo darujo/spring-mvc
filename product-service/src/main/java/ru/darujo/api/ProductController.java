@@ -12,10 +12,8 @@ import java.math.BigDecimal;
 
 @RestController()
 @RequestMapping("/v1/products")
-@CrossOrigin("*")
 public class ProductController {
     private ProductService productService;
-
     @Autowired
     public void setProductService(ProductService productService) {
         this.productService = productService;

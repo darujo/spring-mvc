@@ -8,10 +8,10 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(value = "ru.darujo.*")
 @EntityScan(value = "ru.darujo.*")
-public class SpringMvcApplication {
+public class SpringAuthApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringMvcApplication.class, args);
+		SpringApplication.run(SpringAuthApplication.class, args);
 	}
 
 }

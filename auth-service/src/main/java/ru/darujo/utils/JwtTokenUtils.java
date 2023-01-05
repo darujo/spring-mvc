@@ -18,20 +18,20 @@ public class JwtTokenUtils {
    private String secretKey;
    @Value("${jwt.lifeTimeToken}")
    private Integer lifeTimeToken;
-   private <T> T getClaimFormToken(String token, Function<Claims,T> callback){
-      Claims claims =getAllClamsForToken(token);
-      return callback.apply(claims);
-   }
-
-   private Claims getAllClamsForToken(String token){
-      return Jwts.parser()
-              .setSigningKey(secretKey)
-              .parseClaimsJws(token)
-              .getBody();
-   }
-   public String getUsername(String token) {
-      return getClaimFormToken(token,  claims -> claims.get("username", String.class));
-   }
+//   private <T> T getClaimFormToken(String token, Function<Claims,T> callback){
+//      Claims claims =getAllClamsForToken(token);
+//      return callback.apply(claims);
+//   }
+//
+//   private Claims getAllClamsForToken(String token){
+//      return Jwts.parser()
+//              .setSigningKey(secretKey)
+//              .parseClaimsJws(token)
+//              .getBody();
+//   }
+//   public String getUsername(String token) {
+//      return getClaimFormToken(token,  claims -> claims.get("username", String.class));
+//   }
 
    public  String generateToken(UserDetails userDetails){
       Map<String,Object> claims = new HashMap<>();

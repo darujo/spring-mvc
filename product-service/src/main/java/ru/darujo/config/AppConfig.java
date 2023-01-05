@@ -17,7 +17,7 @@ import ru.darujo.properties.PropertyConnectionInterface;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@PropertySources({@PropertySource("secret.properties"),@PropertySource("integration.properties")})
+@PropertySource("integration.properties")
 @EnableConfigurationProperties(
         BasketServiceProperty.class
 )

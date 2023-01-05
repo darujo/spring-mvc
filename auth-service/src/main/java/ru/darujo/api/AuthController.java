@@ -15,7 +15,6 @@ import ru.darujo.service.UserService;
 import ru.darujo.utils.JwtTokenUtils;
 
 @RestController
-@CrossOrigin("*")
 public class AuthController {
     private UserService userService;
 
