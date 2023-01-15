@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.*;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 import reactor.netty.tcp.TcpClient;
@@ -17,7 +16,7 @@ import ru.darujo.properties.PropertyConnectionInterface;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@PropertySource("integration.properties")
+@PropertySource("classpath:integration.properties")
 @EnableConfigurationProperties(
         BasketServiceProperty.class
 )
