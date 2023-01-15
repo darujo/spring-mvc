@@ -1,12 +1,14 @@
 package ru.darujo.dto;
 
 
+import java.math.BigDecimal;
+
 public class BasketProductInformDto {
     private long productId;
     private String productName;
-    private double quantity;
-    private double price;
-    private double priceAll;
+    private BigDecimal quantity;
+    private BigDecimal price;
+    private BigDecimal priceAll;
 
     public void setProductId(long productId) {
         this.productId = productId;
@@ -16,15 +18,15 @@ public class BasketProductInformDto {
         this.productName = productName;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public void setPriceAll(double priceAll) {
+    public void setPriceAll(BigDecimal priceAll) {
         this.priceAll = priceAll;
     }
 
@@ -36,19 +38,19 @@ public class BasketProductInformDto {
         return productName;
     }
 
-    public double getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public double getPriceAll() {
+    public BigDecimal getPriceAll() {
         return priceAll;
     }
 
-    public BasketProductInformDto(long id, String name, double quantity, double price, double priceAll) {
+    public BasketProductInformDto(long id, String name, BigDecimal quantity, BigDecimal price, BigDecimal priceAll) {
         this.productId = id;
         this.productName = name;
         this.quantity = quantity;

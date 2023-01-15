@@ -4,6 +4,8 @@ import ru.darujo.dto.BasketDto;
 import ru.darujo.dto.BasketProductInformDto;
 import ru.darujo.model.Basket;
 
+import java.math.BigDecimal;
+
 public class BasketConvertor {
     public static Basket getBasket(BasketDto basketDto) {
         Basket basket = new Basket();
@@ -16,9 +18,9 @@ public class BasketConvertor {
         BasketDto basketDto = new BasketDto();
         basketDto.setName(basket.getName());
         basket.getProductInforms().forEach(basketProductInformDto -> basketDto.getProductInformDtos().add(BasketProductConvertor.getBasketProductInformDto(basketProductInformDto)));
-        double price = 0;
+        BigDecimal price = BigDecimal.ZERO;
         for (BasketProductInformDto productInformDto :basketDto.getProductInformDtos()) {
-            price += productInformDto.getPriceAll();
+            price.add(productInformDto.getPriceAll());
         }
         basketDto.setPrice(price);
         return basketDto;

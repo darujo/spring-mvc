@@ -32,10 +32,10 @@ public class OrderService {
         OrderService.productService = productService;
     }
     @Transactional
-    public void createOrderToBasket(User user){
-        BasketDto basket = basketServiceIntegration.getBasket().orElseThrow(()-> new ResourceNotFoundException("Корзина не найдена"));
+    public void createOrderToBasket(String user){
+        BasketDto basket = basketServiceIntegration.getBasket();
         Order order = new Order();
-        order.setUser(user);
+        order.setUsername(user);
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (BasketProductInformDto basketProductInformDto: basket.getProductInformDtos()) {

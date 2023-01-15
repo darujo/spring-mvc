@@ -2,27 +2,40 @@ package ru.darujo.integration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 import ru.darujo.dto.BasketDto;
+import ru.darujo.exceptions.ResourceNotFoundException;
 
 import java.util.Optional;
 
 @Component
 public class BasketServiceIntegration {
-    private RestTemplate restTemplate;
-    @Autowired
-    public void setRestTemplate(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
-    @Value("${urlservice.basket}")
-    private String basketUrl;
+    private WebClient webClientBasket;
 
-    public Optional<BasketDto> getBasket() {
-        return Optional.ofNullable(restTemplate.getForObject(basketUrl,BasketDto.class));
+    @Autowired
+    public void setWebClientBasket(WebClient webClientBasket) {
+        this.webClientBasket = webClientBasket;
+    }
+
+    public BasketDto getBasket() {
+        return webClientBasket.get()
+                .retrieve()
+                .onStatus(httpStatus -> httpStatus.value() == HttpStatus.NOT_FOUND.value(),
+                        clientResponse -> Mono.error(new ResourceNotFoundException("Корзина не найдена")))
+                .bodyToMono(BasketDto.class)
+                .block();
     }
 
     public void clearBasket() {
-        restTemplate.getForObject(basketUrl + "/clear", Void.class );
+        webClientBasket
+                .get()
+                .uri("/clear")
+                .retrieve()
+                .toBodilessEntity()
+                .block();
     }
 }

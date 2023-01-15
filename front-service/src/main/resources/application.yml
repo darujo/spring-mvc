@@ -1,9 +1,5 @@
 server:
-  port: 8181
-  servlet:
-    context-path: /app-front
-spring:
-    main:
-      banner-mode: off
+  port: 3000
+
 
  
