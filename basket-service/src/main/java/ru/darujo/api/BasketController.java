@@ -18,26 +18,22 @@ public class BasketController {
     }
 
     @GetMapping("")
-    public BasketDto getBasket() {
-        UserDto user = new UserDto(1,"111");
-        return BasketConvertor.getBasketDto(basketService.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("Корзина не найден")));
+    public BasketDto getBasket(@RequestHeader String username) {
+        return BasketConvertor.getBasketDto(basketService.findById(username).orElseThrow(() -> new ResourceNotFoundException("Корзина не найден")));
     }
 
     @GetMapping("/clear")
-    public void clearBasket() {
-        UserDto user = new UserDto(1,"111");
-        basketService.clearBasket(user.getId());
+    public void clearBasket(@RequestHeader String username) {
+        basketService.clearBasket(username);
     }
 
     @GetMapping("/add")
-    public BasketDto ProductSave(@RequestParam long productId) {
-        UserDto user = new UserDto(1,"111");
-        return BasketConvertor.getBasketDto(basketService.addProductToBasket(user.getId(), productId));
+    public BasketDto ProductSave(@RequestHeader String username,@RequestParam long productId) {
+        return BasketConvertor.getBasketDto(basketService.addProductToBasket(username, productId));
     }
 
     @GetMapping("/delete")
-    public void deleteProduct(@RequestParam long productId) {
-        UserDto user = new UserDto(1,"111");
-        basketService.deleteProduct(user.getId(), productId);
+    public void deleteProduct(@RequestHeader String username,@RequestParam long productId) {
+        basketService.deleteProduct(username, productId);
     }
 }
