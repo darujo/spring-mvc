@@ -1,143 +1,54 @@
-angular.module('app', ['ngStorage']).controller("indexController", function ($scope, $http, $localStorage) {
-    const constPatchAuth    = 'http://localhost:5555';
-    const constPatchOrder   = 'http://localhost:5555/order-service/v1';
-    const constPatchProduct = 'http://localhost:5555/product-service/v1';
-    const constPatchBasket  = 'http://localhost:5555/basket-service/v1/baskets';
-    var showProducts = function () {
-        document.getElementById("ProductList").style.display = "block";
-        document.getElementById("FormEdit").style.display = "none";
-    };
-    var showFormEdit = function () {
-        document.getElementById("ProductList").style.display = "none";
-        document.getElementById("FormEdit").style.display = "block";
-    };
-    if ($localStorage.authUser){
-        $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.authUser.token;
-        try {
-            let jwt = $localStorage.authUser.token;
-            let payLoad = JSON.parse(atob(jwt.split(".")[1]));
-            let currTime = parseInt(new Date().getTime() / 1000);
-            if(currTime > payLoad.exp){
-                console.log("токен просрочен");
-                delete $localStorage.authUser;
-                $http.defaults.headers.common.Authorization = '';
-            }
-        }
-        catch (e){
+(function () {
+    angular
+        .module('market', ['ngRoute', 'ngStorage'])
+        .config(config)
+        .run(run);
 
-        }
+    function config($routeProvider) {
+        console.log('product');
+        $routeProvider
+            .when('/', {
+                templateUrl: 'welcome/welcome.html',
+                controller: 'welcomeController'
+            })
+            .when('/product', {
+
+                templateUrl: 'product/product.html',
+                controller: 'productController'
+            })
+            .when('/basket', {
+                templateUrl: 'basket/basket.html',
+                controller: 'basketController'
+            })
+            .otherwise({
+                redirectTo: '/'
+            });
     }
 
-
-    $scope.loadProducts = function () {
-        $scope.findPage(0);
-    };
-    var Price;
-    $scope.findPage = function (diffPage) {
-        var page = parseInt(document.getElementById("Page").value) + diffPage;
-        document.getElementById("Page").value = page;
-        $http({
-            url: constPatchProduct + "/products",
-            method: "get",
-            params: {
-                page: page,
-                size: 10,
-                min: Price ? Price.min : null,
-                max: Price ? Price.max : null
+    function run($rootScope, $http, $localStorage) {
+        if ($localStorage.authUser){
+            $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.authUser.token;
+            try {
+                let jwt = $localStorage.authUser.token;
+                let payLoad = JSON.parse(atob(jwt.split(".")[1]));
+                let currTime = parseInt(new Date().getTime() / 1000);
+                if(currTime > payLoad.exp){
+                    console.log("токен просрочен");
+                    delete $localStorage.authUser;
+                    $http.defaults.headers.common.Authorization = '';
+                }
+            }
+            catch (e){
 
             }
-        }).then(function (response) {
-            $scope.ProductList = response.data.content;
-            showProducts();
-        });
+        }
+    }
+})();
 
-    };
-    $scope.filterPrice = function () {
-        Price = $scope.Price;
-        document.getElementById("Page").value = "1";
-        $scope.findPage(0);
-    };
+angular.module('market').controller('indexController', function ($rootScope, $scope, $http, $location, $localStorage) {
+    console.log('aasdsfdgfd');
+    const constPatchAuth    = 'http://localhost:5555';
 
-    var ProductIdEdit = null;
-
-    $scope.createProduct = function () {
-        ProductIdEdit = null;
-        document.getElementById("ProductName").value = "";
-        document.getElementById("ProductPrice").value = 0;
-        $scope.Product.id = null;
-        showFormEdit();
-
-    };
-
-    $scope.editProduct = function (productId) {
-        $http.get(constPatchProduct + "/products/" + productId)
-            .then(function (response) {
-                ProductIdEdit = response.data.id;
-                $scope.Product = response.data;
-                console.log($scope.Product);
-
-                document.getElementById("ProductName").value = response.data.title;
-                document.getElementById("ProductPrice").value = response.data.price;
-                showFormEdit();
-            });
-    };
-    $scope.deleteProduct = function (productId) {
-        $http.delete(constPatchProduct + "/products/" + productId)
-            .then(function (response) {
-                $scope.loadProducts();
-            });
-    };
-    $scope.saveProduct = function () {
-        console.log($scope.Product);
-        console.log(ProductIdEdit);
-
-        $http.post(constPatchProduct + "/products",$scope.Product)
-            .then(function (response) {
-            $scope.loadProducts();
-        });
-    };
-
-    $scope.loadBasket = function () {
-        $http.get(constPatchBasket)
-            .then(function (response) {
-                $scope.Basket = response.data;
-                showProducts();
-            });
-
-    };
-    $scope.addProductToBasket = function (productId) {
-        $http({
-            url: constPatchBasket + "/add",
-            method: "GET",
-            params: {
-                productId: productId
-            }
-        }).then(function (response) {
-            $scope.loadBasket();
-        });
-
-    };
-    $scope.delProductToBasket = function (productId) {
-        console.log(productId);
-        $http({
-            url: constPatchBasket + "/delete",
-            method: "GET",
-            params: {
-                productId: productId
-            }
-        }).then(function (response) {
-            $scope.loadBasket();
-        });
-
-    };
-    $scope.clearBasket = function () {
-        $http({
-            url: constPatchBasket + "/clear",
-            method: "GET"
-        }).then(function (response) {
-            $scope.loadBasket();
-        });
-    };
     $scope.tryToAuth = function () {
         $http.post(constPatchAuth + '/auth', $scope.user)
             .then(function successCallback(response) {
@@ -147,9 +58,9 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
 
                     $scope.user.username = null;
                     $scope.user.password = null;
+
+                    $location.path('/');
                 }
-                $scope.loadProducts();
-                $scope.loadBasket();
             }, function errorCallback(response) {
             });
     };
@@ -162,6 +73,7 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         if ($scope.user.password) {
             $scope.user.password = null;
         }
+        $location.path('/');
     };
 
     $scope.clearUser = function () {
@@ -177,15 +89,6 @@ angular.module('app', ['ngStorage']).controller("indexController", function ($sc
         }
     };
 
-    $scope.saveOrder = function () {
-        $http.get(constPatchOrder+ "/orders/save")
-            .then(function (response) {
-                $scope.Basket = null;
-                alert("Заказ оформлен")
-            });
 
-    };
 
-    $scope.loadProducts();
-    $scope.loadBasket();
 })
