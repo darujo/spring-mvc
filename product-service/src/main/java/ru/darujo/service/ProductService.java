@@ -18,7 +18,8 @@ import java.util.*;
 public class ProductService {
 
     private ProductRepository productRepository;
-
+    private int size = 10;
+    private  Page<Product> productPage;
     @Autowired
     public void setProductRepository(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -38,6 +39,9 @@ public class ProductService {
 
 
     public Page<Product> findProducts(BigDecimal min, BigDecimal max, int page, int size) {
+        if (productPage != null && page == 1 && this.size ==size && min==null && max== null){
+            return productPage;
+        }
         Specification<Product> specification = Specification.where(null);
 
         if (min != null) {
@@ -46,6 +50,8 @@ public class ProductService {
         if (max != null) {
             specification = specification.and(ProductsSpecifications.priceLE(max));
         }
-        return productRepository.findAll(specification, PageRequest.of(page - 1, size));
+        productPage = productRepository.findAll(specification, PageRequest.of(page - 1, size));
+        this.size = size;
+        return productPage;
     }
 }
